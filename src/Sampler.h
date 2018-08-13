@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utility.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -40,19 +40,13 @@ namespace soft3d
 		float maxLOD;
 	};
 
-	class Sampler
+	class Sampler : public RefCount
 	{
 	public:
 		Sampler(const SamplerDesc& desc);
 	public:
 		SamplerDesc m_desc;
 	public:
-		static SamplerDesc s_defaultDesc;
+		static Sampler* New(const SamplerDesc& desc);
 	};
-
-	//-------------------------------------------------------
-	inline Sampler::Sampler(const SamplerDesc& desc) :
-		m_desc(desc)
-	{}
-
 }

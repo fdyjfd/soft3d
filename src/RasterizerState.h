@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utility.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -18,7 +18,7 @@ namespace soft3d
 		back
 	};
 
-	struct RasterizerStateDesc
+	struct RasterizerDesc
 	{
 		FillMode fillMode;
 		CullMode cullMode;
@@ -32,12 +32,14 @@ namespace soft3d
 		bool antialiasedLineEnable;
 	};
 
-	class RasterizerState
+	class RasterizerState : public RefCount
 	{
 	public:
-		RasterizerStateDesc m_rasterizerStateDesc;
+		RasterizerState(const RasterizerDesc& desc);
 	public:
-		static RasterizerStateDesc s_defaultRasterizerStateDesc;
+		RasterizerDesc m_desc;
+	public:
+		static RasterizerState* New(const RasterizerDesc& desc);
 	};
 
 	//----------------------------------------------------

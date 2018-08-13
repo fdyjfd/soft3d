@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utility.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -12,11 +12,9 @@ namespace soft3d
 	class PixelShader;
 	class Resource;
 
-	class DeviceContext
+	class DeviceContext : public RefCount
 	{
 	public:
-		void setRenderState(
-			RenderState* renderState);
 
 		void setVertexBuffers(
 			s3d_uint32 startSlot, 
@@ -43,7 +41,6 @@ namespace soft3d
 		void setPixelShaderSamplers(PixelShader* vertexShader);
 		void setPixelShaderConstantBuffers(PixelShader* vertexShader);
 
-		void setRenderState(RenderState* renderState);
 		void setRenderTargets(Resource** renderTargets, Resource* depthStencil);
 		void setViewport(Viewport viewport);
 

@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Utility.h"
+#include "RefCount.h"
 #include <string>
 #include <vector>
 
 namespace soft3d
 {
+	struct ShaderRegister
+	{};
+
 	class StreamOutput
 	{
 	public:
@@ -25,7 +28,7 @@ namespace soft3d
 
 	typedef void (*VertexShaderFunction)(ShaderRegister* output, const ShaderRegister* input, const SystemValue* systemValue);
 	
-	class VertexShader
+	class VertexShader : public RefCount
 	{
 	public:
 		VertexShaderFunction* m_vertexShaderFunction;
@@ -39,7 +42,7 @@ namespace soft3d
 
 	typedef void(*PixelShaderFunction)(PixelShaderOutput* output, const ShaderRegister* input);
 
-	class PixelShader
+	class PixelShader : public RefCount
 	{
 	public:
 		PixelShaderFunction * m_pixelShaderFunction;
@@ -47,7 +50,7 @@ namespace soft3d
 
 	typedef void(*GeometryShaderFunction)(StreamOutput* output, const ShaderRegister* input);
 
-	class GeometryShader
+	class GeometryShader : public RefCount
 	{
 	public:
 		GeometryShaderFunction * m_geometryShaderFunction;

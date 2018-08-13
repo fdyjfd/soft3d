@@ -6,6 +6,8 @@ namespace soft3d
 {
 	class RefCount
 	{
+		friend class Device;
+		friend class DeviceContext;
 	protected:
 		RefCount();
 		virtual ~RefCount();
@@ -15,23 +17,28 @@ namespace soft3d
 	protected:
 		long internalAddRef();
 		long internalRelease();
+		void safeInternalAddRef();
+		void safeInternalRelease();
 	protected:
 		long m_refCount;
 		long m_internalRefCount;
 	};
 
 	//----------------------------------------------------
-	RefCount::RefCount() :
+	inline RefCount::RefCount() :
 		m_refCount(1),
 		m_internalRefCount(0)
 	{}
+	
+	inline RefCount::~RefCount()
+	{}
 
-	long RefCount::addRef()
+	inline long RefCount::addRef()
 	{
 		return ++m_refCount;
 	}
 
-	long RefCount::release()
+	inline long RefCount::release()
 	{
 		--m_refCount;
 		if (0 == m_refCount && 0 == m_internalRefCount)
@@ -40,17 +47,35 @@ namespace soft3d
 		}
 	}
 
-	long RefCount::internalAddRef()
+	inline long RefCount::internalAddRef()
 	{
 		return ++m_internalRefCount;
 	}
 
-	long RefCount::internalRelease()
+	inline long RefCount::internalRelease()
 	{
-		--m_internalRefCount;
+		long res = --m_internalRefCount;
 		if (0 == m_refCount && 0 == m_internalRefCount)
 		{
 			delete this;
 		}
+		return res;
 	}
+
+	inline void RefCount::safeInternalAddRef()
+	{
+		if (this)
+		{
+			internalAddRef();
+		}
+	}
+
+	inline void RefCount::safeInternalRelease()
+	{
+		if (this)
+		{
+			internalRelease();
+		}
+	}
+
 }

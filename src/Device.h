@@ -1,10 +1,6 @@
 #pragma once
 
-#include "Utility.h"
-#include "RasterizerState.h"
-#include "DepthStencilState.h"
-#include "BlendState.h"
-#include "Sampler.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -18,18 +14,20 @@ namespace soft3d
 	class Texture2DArray;
 	class Texture3DArray;
 	class TextureCube;
-	class RenderState;
 	class Sampler;
+	class RasterizerState;
+	class DepthStencilState;
+	class BlendState;
 	class VertexShader;
-	class HullShader;
-	class DomainShader;
-	class GeometryShader;
 	class PixelShader;
-	class ShaderProgram;
-	struct RenderStateDesc;
-	struct SamplerDesc;
+	class GeometryShader;
 
-	class Device
+	struct SamplerDesc;
+	struct RasterizerDesc;
+	struct DepthStencilDesc;
+	struct BlendDesc;
+
+	class Device : public RefCount
 	{
 	public:
 		VertexBuffer * createVertexBuffer(
@@ -89,7 +87,7 @@ namespace soft3d
 			const SamplerDesc* desc);
 
 		RasterizerState* createRasterizerState(
-			const RasterizerStateDesc* desc);
+			const RasterizerDesc* desc);
 
 		DepthStencilState* createDepthStencilState(
 			const DepthStencilDesc* desc);
@@ -101,9 +99,14 @@ namespace soft3d
 		PixelShader* createPixelShader();
 		GeometryShader* createGeometryShader();
 
-		ShaderProgram* createShaderProgram(
-			VertexShader* vertexShader,
-			PixelShader* pixelShader = 0,
-			GeometryShader* geometryShader = 0);
+		//ShaderProgram* createShaderProgram(
+		//	VertexShader* vertexShader,
+		//	PixelShader* pixelShader = 0,
+		//	GeometryShader* geometryShader = 0);
+	private:
+		static Sampler* s_defaultSampler;
+		static RasterizerState* s_defaultRasterizerState;
+		static DepthStencilState* s_defaultDepthStencilState;
+		static BlendState* s_defaultBlendState;
 	};
 }

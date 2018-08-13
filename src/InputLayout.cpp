@@ -12,7 +12,7 @@ InputLayout::InputLayout(InputElement const* inputElements, s3d_uint32 count)
 {
 	if (inputElements && count)
 	{
-		m_inputElements.insert(inputElements, inputElements + count);
+		m_inputElements.insert(m_inputElements.end(), inputElements, inputElements + count);
 	}
 }
 

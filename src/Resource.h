@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utility.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -18,7 +19,7 @@ namespace soft3d
 		texture_cube,
 	};
 
-	class Resource
+	class Resource : public RefCount
 	{
 	public:
 		Resource(ResourceCategory category);
@@ -38,31 +39,32 @@ namespace soft3d
 	class Buffer : public Resource
 	{
 	public:
-		Buffer(ResourceCategory category);
+		Buffer(ResourceCategory category, s3d_uint32 size);
+		~Buffer();
 	public:
 		void* getData();
 		s3d_uint32 getSize() const;
 	private:
-		void* m_ptr;
+		s3d_uint8* m_buffer;
 		s3d_uint32 m_size;
 	};
 
 	class VertexBuffer : public Buffer
 	{
 	public:
-		VertexBuffer();
+		VertexBuffer(s3d_uint32 size);
 	};
 
 	class IndexBuffer : public Buffer
 	{
 	public:
-		IndexBuffer();
+		IndexBuffer(s3d_uint32 size);
 	};
 
 	class ConstantBuffer : public Buffer
 	{
 	public:
-		ConstantBuffer();
+		ConstantBuffer(s3d_uint32 size);
 	};
 
 	class Texture1D : public Resource
@@ -141,13 +143,21 @@ namespace soft3d
 		return m_category;
 	}
 
-	Buffer::Buffer(ResourceCategory category) :
+	inline Buffer::Buffer(ResourceCategory category, s3d_uint32 size) :
 		Resource(category)
-	{}
+	{
+		m_buffer = new s3d_uint8[size];
+		m_size = size;
+	}
+
+	inline Buffer::~Buffer()
+	{
+		delete[] m_buffer;
+	}
 
 	inline void* Buffer::getData()
 	{
-		return m_ptr;
+		return m_buffer;
 	}
 
 	inline s3d_uint32 Buffer::getSize() const
@@ -155,16 +165,16 @@ namespace soft3d
 		return m_size;
 	}
 
-	VertexBuffer::VertexBuffer() :
-		VertexBuffer(ResourceCategory::vertex_buffer)
+	inline VertexBuffer::VertexBuffer(s3d_uint32 size) :
+		Buffer(ResourceCategory::vertex_buffer, size)
 	{}
 
-	IndexBuffer::IndexBuffer() :
-		IndexBuffer(ResourceCategory::index_buffer)
+	inline IndexBuffer::IndexBuffer(s3d_uint32 size) :
+		Buffer(ResourceCategory::index_buffer, size)
 	{}
 
-	ConstantBuffer::ConstantBuffer() :
-		ConstantBuffer(ResourceCategory::constant_buffer)
+	inline ConstantBuffer::ConstantBuffer(s3d_uint32 size) :
+		Buffer(ResourceCategory::constant_buffer, size)
 	{}
 
 }

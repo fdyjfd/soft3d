@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utility.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -34,12 +34,14 @@ namespace soft3d
 		StencilOperation backFace;
 	};
 
-	class DepthStencilState
+	class DepthStencilState : public RefCount
 	{
+	public:
+		DepthStencilState(const DepthStencilDesc& desc);
 	public:
 		DepthStencilDesc m_desc;
 	public:
-		static DepthStencilDesc s_defaultDesc;
+		static DepthStencilState* New(const DepthStencilDesc& desc);
 	};
 
 	//----------------------------------------------------

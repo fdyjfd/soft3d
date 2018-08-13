@@ -1,12 +1,10 @@
 #pragma once
 
 #include "DeviceContext.h"
+#include "Resource.h"
+#include "InputLayout.h"
 
 BEGIN_SOFT3D
-
-void DeviceContext::DeviceContext::setRenderState(RenderState* renderState)
-{
-}
 
 void DeviceContext::setVertexBuffers(
 	s3d_uint32 startSlot, 
@@ -25,7 +23,9 @@ void DeviceContext::setVertexBuffers(
 	}
 	for (s3d_uint32 i = 0; i < count; ++i)
 	{
-
+		vertexBuffers[i]->safeInternalAddRef();
+		m_vertexBuffers[startSlot + i]->safeInternalRelease();
+		m_vertexBuffers[startSlot + i] = vertexBuffers[i];
 	}
 }
 
@@ -89,10 +89,6 @@ void DeviceContext::setPixelShaderConstantBuffers(PixelShader* vertexShader)
 }
 
 
-void DeviceContext::setRenderState(RenderState* renderState)
-{
-}
-
 void DeviceContext::setRenderTargets(Resource** renderTargets, Resource* depthStencil)
 {
 }
@@ -142,7 +138,7 @@ void DeviceContext::drawPoint(s3d_uint32 vertexLocation)
 
 void DeviceContext::drawPointList(s3d_uint32 vertexCount, s3d_uint32 startVertexLocation)
 {
-	m_inputLayout
+	//m_inputLayout
 	for (s3d_uint32 i = 0; i < vertexCount; ++i)
 	{
 		drawPoint(startVertexLocation + i);

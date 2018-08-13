@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utility.h"
+#include "RefCount.h"
 
 namespace soft3d
 {
@@ -53,12 +53,14 @@ namespace soft3d
 		RenderTargetBlendDesc renderTarget[8];
 	};
 
-	class BlendState
+	class BlendState : public RefCount
 	{
+	public:
+		BlendState(const BlendDesc& desc);
 	public:
 		BlendDesc m_desc;
 	public:
-		static BlendDesc s_defaultDesc;
+		static BlendState* New(const BlendDesc& desc);
 	};
 
 	//----------------------------------------------------
